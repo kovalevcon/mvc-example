@@ -2,3 +2,4 @@
 vendor
 htdocs
 .php_cs.cache
+config/db.php

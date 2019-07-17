@@ -25,6 +25,20 @@
       "Exceptions\\": "app/Exceptions/"
     }
   },
+  "scripts": {
+    "copy-config": [
+      "php -r \"copy('config/db.php.example', 'config/db.php');\""
+    ],
+    "start-migrations": [
+      "php -f \"database/migrations/create_mvc_example_database.php\"",
+      "php -f \"database/change_name_of_database.php\"",
+      "php -f \"database/migrations/create_products_table.php\"",
+      "php -f \"database/migrations/create_orders_table.php\""
+    ],
+    "server-start": [
+      "php -S 127.0.0.1:8888 -t public"
+    ]
+  },
   "minimum-stability": "dev",
   "prefer-stable": true,
   "config": {

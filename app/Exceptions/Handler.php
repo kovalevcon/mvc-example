@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Exceptions;
 
 use Exception;
+use PDOException;
 use Symfony\Component\Config\Exception\FileLocatorFileNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
@@ -22,6 +23,7 @@ class Handler
         NoConfigurationException::class         => NotFoundRoute::class,
         FileLocatorFileNotFoundException::class => NotFoundRouteFile::class,
         MethodNotAllowedException::class        => MethodNotAllow::class,
+        PDOException::class                     => PDOErrorException::class,
     ];
 
     /**
