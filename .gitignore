@@ -1,0 +1,4 @@
+.idea
+vendor
+htdocs
+.php_cs.cache

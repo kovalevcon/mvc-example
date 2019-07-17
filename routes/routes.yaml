@@ -1,0 +1,19 @@
+generate_products:
+  path:       /products
+  defaults:   { controller: 'ProductController', method: 'generate'}
+  methods:    POST
+
+get_products:
+  path:       /products
+  defaults:   { controller: 'ProductController', method: 'show'}
+  methods:    GET
+
+create_order:
+  path:       /orders
+  defaults:   { controller: 'OrderController', method: 'create'}
+  methods:    POST
+
+pay_order:
+  path:       /orders
+  defaults:   { controller: 'OrderController', method: 'pay'}
+  methods:    PUT
