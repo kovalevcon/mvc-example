@@ -21,10 +21,20 @@ class Application
     public function run()
     {
         try {
+            $this->config();
             $this->router->parse($this->request);
-            var_dump($this->router);
+
+            /** @var Dispatcher $dispatcher */
+            $dispatcher = new Dispatcher($this->router);
+            return $dispatcher->dispatch();
         } catch (Exception $e) {
             return Response::errorResponse($e);
         }
+    }
+
+    private function config(): void
+    {
+        require_once __DIR__ . '/../../config/core.php';
+        require_once __DIR__ . '/../../config/db.php';
     }
 }

@@ -14,6 +14,8 @@ create_order:
   methods:    POST
 
 pay_order:
-  path:       /orders
+  path:       /orders/{id}
   defaults:   { controller: 'OrderController', method: 'pay'}
   methods:    PUT
+  requirements:
+    id: '[0-9]+'
