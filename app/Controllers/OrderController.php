@@ -2,23 +2,23 @@
 declare(strict_types=1);
 namespace Controllers;
 
-use Core\BaseController;
-use Core\Response;
+use Core\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Class OrderController
  *
  * @package Controllers
+ * @property \Services\OrderServiceRepository $service
  */
-class OrderController extends BaseController implements OrderControllerInterface
+class OrderController extends Controller implements OrderControllerRepository
 {
     /**
      * @inheritDoc
      */
     public function create(array $params): JsonResponse
     {
-        return Response::successResponse('OK');
+        return $this->service->createOrder($params);
     }
 
     /**
@@ -26,6 +26,6 @@ class OrderController extends BaseController implements OrderControllerInterface
      */
     public function pay(array $params): JsonResponse
     {
-        return Response::successResponse('OK');
+        return $this->service->payOrder($params);
     }
 }

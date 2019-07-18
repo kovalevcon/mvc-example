@@ -11,6 +11,8 @@ use \Symfony\Component\HttpFoundation\Request as SymfonyRequest;
  */
 class Request
 {
+    use RequestUtils;
+
     /** @var SymfonyRequest $symfonyRequest  */
     public $symfonyRequest;
 
@@ -30,7 +32,7 @@ class Request
     public function getJsonBody(): array
     {
         return strpos($this->symfonyRequest->headers->get('Content-Type'), 'application/json') === 0 ?
-            json_decode($this->symfonyRequest->getContent(), true) ?? [] : []
+            $this->safetyUserData(json_decode($this->symfonyRequest->getContent(), true)) ?? [] : []
         ;
     }
 }

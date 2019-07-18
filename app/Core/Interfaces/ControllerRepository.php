@@ -3,11 +3,11 @@ declare(strict_types=1);
 namespace Core;
 
 /**
- * Interface Controller
+ * Interface ControllerRepository
  *
  * @package Core
  */
-interface Controller
+interface ControllerRepository
 {
 
 }

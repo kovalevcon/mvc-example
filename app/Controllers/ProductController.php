@@ -2,23 +2,23 @@
 declare(strict_types=1);
 namespace Controllers;
 
-use Core\BaseController;
-use Core\Response;
+use Core\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Class ProductController
  *
  * @package Controllers
+ * @property \Services\ProductServiceRepository $service
  */
-class ProductController extends BaseController implements ProductControllerInterface
+class ProductController extends Controller implements ProductControllerRepository
 {
     /**
      * @inheritDoc
      */
     public function generate(): JsonResponse
     {
-        return Response::successResponse('OK');
+        return $this->service->generateProducts();
     }
 
     /**
@@ -26,6 +26,6 @@ class ProductController extends BaseController implements ProductControllerInter
      */
     public function show(): JsonResponse
     {
-        return Response::successResponse('OK');
+        return $this->service->showAllProducts();
     }
 }

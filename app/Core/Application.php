@@ -3,38 +3,41 @@ declare(strict_types=1);
 namespace Core;
 
 use Exception;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * Class Application
+ *
+ * @package Core
+ */
 class Application
 {
-    private $request;
-    private $router;
-
     /**
-     * Application constructor.
+     * Run application
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function __construct()
-    {
-        $this->request = new Request;
-        $this->router = new Router;
-    }
-
-    public function run()
+    public function run(): JsonResponse
     {
         try {
             $this->config();
-            $this->router->parse($this->request);
-
-            /** @var Dispatcher $dispatcher */
-            $dispatcher = new Dispatcher($this->router);
-            return $dispatcher->dispatch();
+            /** @var Router $router */
+            $router = (new Router)->parse(new Request);
+            return (new Dispatcher($router))->dispatch();
         } catch (Exception $e) {
             return Response::errorResponse($e);
         }
     }
 
+    /**
+     * Configure application
+     *
+     * @throws \Exception
+     */
     private function config(): void
     {
         require_once __DIR__ . '/../../config/core.php';
         require_once __DIR__ . '/../../config/db.php';
+        Database::getInstance();
     }
 }

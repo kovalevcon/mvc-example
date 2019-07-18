@@ -2,6 +2,11 @@
 
 This project contains the implementation of MVC pattern.
 
+# Requirements
+
+* **PHP** >= `7.2`;
+* **MySQL** >= `5.7` or **MariaDB** >= `10.3`. Configure connection in `config/db.php` file. 
+
 # Install
 
 1. Install dependencies:
@@ -16,7 +21,7 @@ This project contains the implementation of MVC pattern.
     composer dump-autoload -o
     ```
 
-3. Run copy config command and edit if needed:
+3. Run copy config command and edit MySQL config (`config/db.php`) if needed:
 
     ```bash
     composer copy-config
@@ -34,3 +39,9 @@ This project contains the implementation of MVC pattern.
     ```bash
     composer server-start
     ```
+
+# Testing
+
+
+
+-- <cite>Kovalev Constantine</cite>

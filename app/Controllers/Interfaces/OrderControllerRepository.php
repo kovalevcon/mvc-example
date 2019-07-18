@@ -5,23 +5,25 @@ namespace Controllers;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * Interface ProductControllerInterface
+ * Interface OrderControllerInterface
  *
  * @package Controllers
  */
-interface ProductControllerInterface
+interface OrderControllerRepository
 {
     /**
-     * Method for generate products
+     * Method for create order
      *
+     * @param array $params
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function generate(): JsonResponse;
+    public function create(array $params): JsonResponse;
 
     /**
-     * Method for show products
+     * Method for pay order
      *
+     * @param array $params
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function show(): JsonResponse;
+    public function pay(array $params): JsonResponse;
 }

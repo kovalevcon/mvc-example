@@ -22,7 +22,9 @@
     "psr-4": {
       "Core\\": "app/Core/",
       "Controllers\\": "app/Controllers/",
-      "Exceptions\\": "app/Exceptions/"
+      "Exceptions\\": "app/Exceptions/",
+      "Models\\": "app/Models/",
+      "Services\\": "app/Services/"
     }
   },
   "scripts": {
@@ -33,7 +35,8 @@
       "php -f \"database/migrations/create_mvc_example_database.php\"",
       "php -f \"database/change_name_of_database.php\"",
       "php -f \"database/migrations/create_products_table.php\"",
-      "php -f \"database/migrations/create_orders_table.php\""
+      "php -f \"database/migrations/create_orders_table.php\"",
+      "php -f \"database/migrations/create_order_products_table.php\""
     ],
     "server-start": [
       "php -S 127.0.0.1:8888 -t public"

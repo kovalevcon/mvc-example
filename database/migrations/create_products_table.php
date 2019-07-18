@@ -5,6 +5,7 @@ require_once __DIR__ . '/../../app/Core/Database.php';
 $pdo = \Core\Database::getInstance();
 $pdo->beginTransaction();
 try {
+    /** @var PDOStatement $sql */
     $sql = $pdo->prepare("
         CREATE TABLE products (
             `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,

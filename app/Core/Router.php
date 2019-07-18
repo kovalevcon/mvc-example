@@ -45,7 +45,7 @@ class Router
             $matchArray = $matcher->match($context->getPathInfo());
             ['controller' => $this->controller, 'method' => $this->method] = $matchArray;
             unset($matchArray['controller'], $matchArray['method'], $matchArray['_route']);
-            $this->params = $matchArray;
+            $this->params = array_merge($matchArray, $request->getJsonBody());
 
             if (!$this->isHasControllerAndMethod()) {
                 throw new NotEnoughRouterParameters;

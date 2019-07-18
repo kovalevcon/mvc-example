@@ -25,13 +25,11 @@ class Dispatcher implements DispatcherInterface
     }
 
     /**
-     * Dispatch method in needed controller
-     *
-     * @return JsonResponse
+     * @inheritDoc
      */
     public function dispatch(): JsonResponse
     {
-        /** @var Controller $controller */
+        /** @var ControllerRepository $controller */
         $controller = $this->loadController();
         return $controller->{$this->router->method}($this->router->params);
     }
@@ -39,11 +37,13 @@ class Dispatcher implements DispatcherInterface
     /**
      * Load needed controller
      *
-     * @return Controller
+     * @return ControllerRepository
      */
-    private function loadController(): Controller
+    private function loadController(): ControllerRepository
     {
         $controllerName = "Controllers\\{$this->router->controller}";
-        return new $controllerName;
+        $modelName = 'Models\\' . str_replace('Controller', '', $this->router->controller);
+        $serviceName = 'Services\\' . str_replace('Controller', 'Service', $this->router->controller);
+        return new $controllerName(new $serviceName(new $modelName));
     }
 }
