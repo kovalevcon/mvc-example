@@ -48,7 +48,7 @@ abstract class Model implements ModelRepository
             if ($sql && $sql->execute()) {
                 return ['items' => $sql->fetchAll(PDO::FETCH_CLASS, static::class), 'error' => null];
             }
-            throw new Exception("Database error: while get all rows from `{$this->table}` table");
+            throw new Exception("Database error: while get all rows from `{$this->table}` table.");
         } catch (Exception $e) {
             return ['items' => null, 'error' => $e->getMessage()];
         }
@@ -64,9 +64,13 @@ abstract class Model implements ModelRepository
             $sql = Database::getInstance()
                 ->prepare("SELECT * FROM `{$this->table}` WHERE `id` = :id");
             if ($sql && $sql->execute(['id' => $id])) {
-                return ['item' => $sql->fetch(PDO::FETCH_CLASS, static::class), 'error' => null];
+                $items = $sql->fetchAll(PDO::FETCH_CLASS, static::class);
+                if (!count($items)) {
+                    throw new Exception("Database error: not found `{$id}` in `{$this->table}` table.");
+                }
+                return ['item' => $items[0], 'error' => null];
             }
-            throw new Exception("Database error: while get on row from `{$this->table}` table");
+            throw new Exception("Database error: while get on row from `{$this->table}` table.");
         } catch (Exception $e) {
             return ['item' => null, 'error' => $e->getMessage()];
         }
@@ -84,7 +88,7 @@ abstract class Model implements ModelRepository
             if ($sql && $sql->execute(['id' => $id])) {
                 return ['status' => true, 'error' => null];
             }
-            throw new Exception("Database error: while get on row from `{$this->table}` table");
+            throw new Exception("Database error: while get on row from `{$this->table}` table.");
         } catch (Exception $e) {
             return ['status' => false, 'error' => $e->getMessage()];
         }
@@ -112,7 +116,7 @@ abstract class Model implements ModelRepository
                 return ['id' => (int)$id, 'error' => null];
             }
             var_dump($pdo->errorInfo());
-            throw new Exception("Database error: while execute query from `{$this->table}` table");
+            throw new Exception("Database error: while execute query from `{$this->table}` table.");
         } catch (Exception $e) {
             $pdo->rollBack();
             return ['id' => null, 'error' => $e->getMessage()];

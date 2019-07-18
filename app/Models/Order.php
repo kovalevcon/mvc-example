@@ -2,13 +2,17 @@
 declare(strict_types=1);
 namespace Models;
 
+use Core\Database;
 use Core\Model;
 use Exception;
+use PDO;
+use PDOStatement;
 
 /**
  * Class Order
  *
  * @package Models
+ * @property array $orderProducts
  */
 class Order extends Model
 {
@@ -40,6 +44,21 @@ class Order extends Model
     public function __construct()
     {
         $this->id = (int)$this->id;
+    }
+
+    /**
+     * Getter for unknown attributes
+     *
+     * @param string $name
+     * @return array|null
+     */
+    public function __get(string $name)
+    {
+        if ($name === 'orderProducts') {
+            return $this->relationOrderProducts();
+        }
+
+        return null;
     }
 
     /**
@@ -103,5 +122,56 @@ class Order extends Model
             'order_id'      => $this->id,
             'product_id'    => $productId,
         ]);
+    }
+
+    /**
+     * Get relation one-to-many of OrderProducts
+     *
+     * @return array|null
+     */
+    public function relationOrderProducts(): ?array
+    {
+        try {
+            /** @var OrderProduct $orderProduct */
+            $orderProduct = new OrderProduct;
+            /** @var PDOStatement $sql */
+            $sql = Database::getInstance()
+                ->prepare("SELECT * FROM `{$orderProduct->getTable()}` WHERE `order_id` = :order_id");
+            if ($sql && $sql->execute(['order_id' => $this->id])) {
+                $items = $sql->fetchAll(PDO::FETCH_CLASS, OrderProduct::class);
+                return count($items) ? $items : null;
+            }
+            return null;
+        } catch (Exception $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Calculate sum of order
+     *
+     * @return float
+     */
+    public function calculateSum(): float
+    {
+        $sum = 0.0000;
+        foreach ($this->orderProducts as $orderProduct) {
+            /** @var OrderProduct $orderProduct */
+            if ($orderProduct->product) {
+                $sum += $orderProduct->product->cost;
+            }
+        }
+        return $sum;
+    }
+
+    /**
+     * Check sum of order
+     *
+     * @param float $sum
+     * @return bool
+     */
+    public function checkSum(float $sum): bool
+    {
+        return $sum === $this->calculateSum();
     }
 }

@@ -2,13 +2,18 @@
 declare(strict_types=1);
 namespace Models;
 
+use Core\Database;
 use Core\Model;
 use Exception;
+use PDO;
+use PDOStatement;
 
 /**
  * Class OrderProduct
  *
  * @package Models
+ * @property Product $product
+ * @property Order $order
  */
 class OrderProduct extends Model
 {
@@ -32,6 +37,23 @@ class OrderProduct extends Model
         $this->id = (int)$this->id;
         $this->order_id = (int)$this->order_id;
         $this->product_id = (int)$this->product_id;
+    }
+
+    /**
+     * Getter for unknown attributes
+     *
+     * @param string $name
+     * @return array|null
+     */
+    public function __get(string $name)
+    {
+        if ($name === 'product') {
+            return $this->relationProduct();
+        } elseif ($name === 'order') {
+            return $this->relationOrder();
+        }
+
+        return null;
     }
 
     /**
@@ -78,6 +100,52 @@ class OrderProduct extends Model
             );
         } catch (Exception $e) {
             return ['id' => null, 'error' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Get relation one-to-one of Product
+     *
+     * @return array|null
+     */
+    public function relationProduct(): ?Product
+    {
+        try {
+            /** @var OrderProduct $product */
+            $product = new Product;
+            /** @var PDOStatement $sql */
+            $sql = Database::getInstance()
+                ->prepare("SELECT * FROM `{$product->getTable()}` WHERE `id` = :product_id");
+            if ($sql && $sql->execute(['product_id' => $this->product_id])) {
+                $items = $sql->fetchAll(PDO::FETCH_CLASS, Product::class);
+                return count($items) ? $items[0] : null;
+            }
+            return null;
+        } catch (Exception $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Get relation one-to-one of Order
+     *
+     * @return array|null
+     */
+    public function relationOrder(): ?Order
+    {
+        try {
+            /** @var Order $order */
+            $order = new Order;
+            /** @var PDOStatement $sql */
+            $sql = Database::getInstance()
+                ->prepare("SELECT * FROM `{$order->getTable()}` WHERE `id` = :order_id");
+            if ($sql && $sql->execute(['order_id' => $this->order_id])) {
+                $items = $sql->fetchAll(PDO::FETCH_CLASS, Order::class);
+                return count($items) ? $items[0] : null;
+            }
+            return null;
+        } catch (Exception $e) {
+            return null;
         }
     }
 }
