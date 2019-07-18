@@ -2,8 +2,7 @@
 declare(strict_types=1);
 namespace Models;
 
-use Core\Database;
-use Core\Model;
+use Core\{Database, Model};
 use Exception;
 use PDO;
 use PDOStatement;

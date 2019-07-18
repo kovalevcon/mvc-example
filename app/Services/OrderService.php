@@ -2,14 +2,10 @@
 declare(strict_types=1);
 namespace Services;
 
-use Core\Database;
-use Core\Response;
-use Core\Service;
+use Core\{Database, Response, Service};
 use Exception;
 use Exceptions\Handler;
-use Models\Order;
-use Models\Product;
-use Models\User;
+use Models\{Order, Product, User};
 use PDO;
 use PDOStatement;
 use Symfony\Component\HttpFoundation\JsonResponse;

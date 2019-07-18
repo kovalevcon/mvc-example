@@ -28,6 +28,7 @@ class Request
      * Get json body as array
      *
      * @return array
+     * @throws \Exception
      */
     public function getJsonBody(): array
     {

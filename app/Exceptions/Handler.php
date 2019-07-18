@@ -6,9 +6,11 @@ use Exception;
 use PDOException;
 use Symfony\Component\Config\Exception\FileLocatorFileNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Exception\MethodNotAllowedException;
-use Symfony\Component\Routing\Exception\NoConfigurationException;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\Exception\{
+    MethodNotAllowedException,
+    NoConfigurationException,
+    ResourceNotFoundException
+};
 
 /**
  * Class Handler
