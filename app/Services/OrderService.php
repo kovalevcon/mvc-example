@@ -4,9 +4,10 @@ namespace Services;
 
 use Core\{Database, Response, Service};
 use Exception;
-use Exceptions\Handler;
-use Models\{Order, Product, User};
+use Exceptions\{Handler, OrderException};
+use Models\{ModelFactory, Order, Product, User};
 use PDO;
+use PDOException;
 use PDOStatement;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -28,13 +29,13 @@ class OrderService extends Service implements OrderServiceRepository
             $products = $this->getProductsForOrder($params['product_ids']);
 
             try {
-                ['id' => $orderId, 'error' => $error] = (new Order)->create([
+                ['id' => $orderId, 'error' => $error] = ModelFactory::make(Order::class)->create([
                     'user_id'    => (new User)->id,
                     'status'     => Order::STATUS_NEW,
                 ]);
 
                 if ($error) {
-                    throw new Exception($error);
+                    throw new OrderException($error);
                 }
 
                 $sum = 0;
@@ -42,7 +43,7 @@ class OrderService extends Service implements OrderServiceRepository
                     /** @var Product $product */
                     ['error' => $error] = $product->createOrderProduct($orderId);
                     if ($error) {
-                        throw new Exception($error);
+                        throw new OrderException($error);
                     }
                     $sum += $product->cost;
                 }
@@ -66,22 +67,22 @@ class OrderService extends Service implements OrderServiceRepository
             try {
                 ['id' => $orderId, 'sum' => $orderSum] = $params;
                 /** @var Order $order */
-                ['item' => $order, 'error' => $error] = (new Order())->show($orderId);
+                ['item' => $order, 'error' => $error] = ModelFactory::make(Order::class)->show($orderId);
 
                 if ($error) {
-                    throw new Exception($error);
+                    throw new OrderException($error);
                 }
 
                 if ($order->status !== Order::STATUS_NEW) {
-                    throw new Exception('System error: status of order should be `new`.');
+                    throw new OrderException('Order error: status of order should be `new`.');
                 }
 
                 if (!$order->checkSum($orderSum)) {
-                    throw new Exception('System error: sum of order does not match.');
+                    throw new OrderException('Order error: sum of order does not match.');
                 }
 
                 if (!$this->checkGateway(GATEWAY_URL)) {
-                    throw new Exception('System error: gateway is not available.');
+                    throw new OrderException('Order error: gateway is not available.');
                 }
 
                 ['error' => $error] = $order->edit($order->id, [
@@ -92,7 +93,7 @@ class OrderService extends Service implements OrderServiceRepository
                 ]);
 
                 if ($error) {
-                    throw new Exception('System error: cannot update status for order.');
+                    throw new OrderException('Order error: cannot update status for order.');
                 }
                 return Response::successResponse(['id' => $orderId, 'status' => Order::STATUS_PAID]);
             } catch (Exception $e) {
@@ -152,7 +153,7 @@ class OrderService extends Service implements OrderServiceRepository
     {
         try {
             /** @var Product $product */
-            $product = new Product;
+            $product = ModelFactory::make(Product::class);
             $whereIn = str_repeat('?,', count($productsIds) - 1) . '?';
 
             /** @var PDOStatement $sql */
@@ -162,14 +163,14 @@ class OrderService extends Service implements OrderServiceRepository
                 /** @var array[Product] $products */
                 $products = $sql->fetchAll(PDO::FETCH_CLASS, Product::class);
                 if (!count($products)) {
-                    throw new Exception(
-                        'Bad request data: invalid `product_ids` values.',
+                    throw new OrderException(
+                        'Order error: invalid `product_ids` values.',
                         \Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
                     );
                 }
                 return $products;
             }
-            throw new Exception('Database error: cannot check `product_ids`.');
+            throw new PDOException('Database error: not found rows by selected conditions.');
         } catch (Exception $e) {
             Handler::handle($e);
         }
@@ -191,6 +192,6 @@ class OrderService extends Service implements OrderServiceRepository
         curl_exec($curl);
         $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
-        return $httpCode === 200;
+        return $httpCode === \Symfony\Component\HttpFoundation\Response::HTTP_OK;
     }
 }

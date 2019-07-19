@@ -117,7 +117,7 @@ class Order extends Model
      */
     public function createOrderProduct(int $productId): array
     {
-        return (new OrderProduct)->create([
+        return ModelFactory::make(OrderProduct::class)->create([
             'order_id'      => $this->id,
             'product_id'    => $productId,
         ]);
@@ -132,7 +132,7 @@ class Order extends Model
     {
         try {
             /** @var OrderProduct $orderProduct */
-            $orderProduct = new OrderProduct;
+            $orderProduct = ModelFactory::make(OrderProduct::class);
             /** @var PDOStatement $sql */
             $sql = Database::getInstance()
                 ->prepare("SELECT * FROM `{$orderProduct->getTable()}` WHERE `order_id` = :order_id");

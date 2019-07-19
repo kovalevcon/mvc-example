@@ -42,6 +42,8 @@ This project contains the implementation of MVC pattern.
 
 # Testing
 
+You can import template of requests through REST API `Insomnia` by import file `./insomnia-import.json`.
+
 1. Generate `20` products:
 
     Request:
@@ -280,7 +282,7 @@ This project contains the implementation of MVC pattern.
 
     ```bash
     curl --request PUT \
-      --url http://mvc-example.loc:8080/orders \
+      --url http://locahost:8080/orders \
       --header 'content-type: application/json' \
       --data '{
     	"id": 1,

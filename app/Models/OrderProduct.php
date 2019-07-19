@@ -110,8 +110,8 @@ class OrderProduct extends Model
     public function relationProduct(): ?Product
     {
         try {
-            /** @var OrderProduct $product */
-            $product = new Product;
+            /** @var Product $product */
+            $product = ModelFactory::make(Product::class);
             /** @var PDOStatement $sql */
             $sql = Database::getInstance()
                 ->prepare("SELECT * FROM `{$product->getTable()}` WHERE `id` = :product_id");
@@ -134,7 +134,7 @@ class OrderProduct extends Model
     {
         try {
             /** @var Order $order */
-            $order = new Order;
+            $order = ModelFactory::make(Order::class);
             /** @var PDOStatement $sql */
             $sql = Database::getInstance()
                 ->prepare("SELECT * FROM `{$order->getTable()}` WHERE `id` = :order_id");

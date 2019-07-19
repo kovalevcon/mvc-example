@@ -92,7 +92,7 @@ class Product extends Model
      */
     public function createOrderProduct(int $orderId): array
     {
-        return (new OrderProduct)->create([
+        return ModelFactory::make(OrderProduct::class)->create([
             'order_id'      => $orderId,
             'product_id'    => $this->id,
         ]);

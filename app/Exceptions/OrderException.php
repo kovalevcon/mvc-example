@@ -6,14 +6,14 @@ use Exception;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class PDOErrorException
+ * Class OrderException
  *
  * @package Exceptions
  */
-class PDOErrorException extends Exception
+class OrderException extends Exception
 {
     /** @var string $message */
-    protected $message = 'Database error: Error while connection to PDO.';
+    protected $message = 'Order error: while work with order.';
     /** @var int $code */
     protected $code = Response::HTTP_INTERNAL_SERVER_ERROR;
 }
