@@ -25,7 +25,7 @@ class OrderService extends Service implements OrderServiceRepository
     {
         try {
             $this->validateCreateOrder($params);
-            /** @var array[Product] $products */
+            /** @var array $products */
             $products = $this->getProductsForOrder($params['product_ids']);
 
             try {
@@ -160,7 +160,7 @@ class OrderService extends Service implements OrderServiceRepository
             $sql = (Database::getInstance())
                 ->prepare("SELECT * FROM `{$product->getTable()}` WHERE `id` IN ({$whereIn})");
             if ($sql && $sql->execute($productsIds)) {
-                /** @var array[Product] $products */
+                /** @var array $products */
                 $products = $sql->fetchAll(PDO::FETCH_CLASS, Product::class);
                 if (!count($products)) {
                     throw new OrderException(
