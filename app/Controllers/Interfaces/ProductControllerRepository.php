@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
-namespace Controllers;
+namespace App\Controllers;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Interface ProductControllerInterface
  *
- * @package Controllers
+ * @package App\Controllers
  */
 interface ProductControllerRepository
 {
@@ -15,6 +15,7 @@ interface ProductControllerRepository
      * Method for generate products
      *
      * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @throws \App\Core\Exceptions\ControllerException
      */
     public function generate(): JsonResponse;
 
@@ -22,6 +23,7 @@ interface ProductControllerRepository
      * Method for show products
      *
      * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @throws \App\Core\Exceptions\ControllerException
      */
     public function show(): JsonResponse;
 }

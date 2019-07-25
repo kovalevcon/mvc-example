@@ -1,15 +1,16 @@
 <?php
 declare(strict_types=1);
-namespace Core;
+namespace App\Core\Http;
 
+use App\Core\Traits\RequestUtils;
 use \Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 /**
  * Class Request
  *
- * @package Core
+ * @package App\Core\Http
  */
-class Request
+class Request extends SymfonyRequest
 {
     use RequestUtils;
 

@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
-namespace Core;
+namespace App\Core;
 
+use App\Core\Exceptions\Handler;
+use App\Core\Http\Request;
 use Exception;
-use Exceptions\Handler;
-use Exceptions\NotEnoughRouterParameters;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
@@ -13,7 +13,7 @@ use Symfony\Component\Routing\RequestContext;
 /**
  * Class Router
  *
- * @package Core
+ * @package App\Core
  */
 class Router
 {
@@ -44,27 +44,13 @@ class Router
             /** @var array $matchArray */
             $matchArray = $matcher->match($context->getPathInfo());
             ['controller' => $this->controller, 'method' => $this->method] = $matchArray;
-            unset($matchArray['controller'], $matchArray['method'], $matchArray['_route']);
-            $this->params = array_merge($matchArray, $request->getJsonBody());
-
-            if (!$this->isHasControllerAndMethod()) {
-                throw new NotEnoughRouterParameters;
-            }
+//            unset($matchArray['controller'], $matchArray['method'], $matchArray['_route']);
+//            $this->params = array_merge($matchArray, $request->getJsonBody());
 
             return $this;
         } catch (Exception $e) {
             Handler::handle($e);
             return $this;
         }
-    }
-
-    /**
-     * Check is has controller and method parameters
-     *
-     * @return bool
-     */
-    private function isHasControllerAndMethod(): bool
-    {
-        return !!$this->controller && !!$this->method;
     }
 }

@@ -1,15 +1,16 @@
 <?php
 declare(strict_types=1);
-namespace Controllers;
+namespace App\Controllers;
 
-use Core\Controller;
+use App\Core\Controller;
+use App\Services\ProductService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Class ProductController
  *
- * @package Controllers
- * @property \Services\ProductServiceRepository $service
+ * @package App\Controllers
+ * @property \App\Services\ProductServiceRepository $service
  */
 class ProductController extends Controller implements ProductControllerRepository
 {
@@ -18,7 +19,9 @@ class ProductController extends Controller implements ProductControllerRepositor
      */
     public function generate(): JsonResponse
     {
-        return $this->service->generateProducts();
+        /** @var ProductService $service */
+        $service = $this->getService(ProductService::class);
+        return $service->generateProducts();
     }
 
     /**
@@ -26,6 +29,8 @@ class ProductController extends Controller implements ProductControllerRepositor
      */
     public function show(): JsonResponse
     {
-        return $this->service->showAllProducts();
+        /** @var ProductService $service */
+        $service = $this->getService(ProductService::class);
+        return $service->showAllProducts();
     }
 }

@@ -1,16 +1,15 @@
 <?php
 declare(strict_types=1);
-namespace Exceptions;
+namespace App\Core\Exceptions;
 
-use Exception;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class NotFoundRoute
  *
- * @package Exceptions
+ * @package App\Core\Exceptions
  */
-class NotFoundRoute extends Exception
+class NotFoundRoute extends CoreException
 {
     /** @var string $message */
     protected $message = 'Not found route.';

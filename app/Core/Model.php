@@ -1,7 +1,8 @@
 <?php
 declare(strict_types=1);
-namespace Core;
+namespace App\Core;
 
+use App\Core\Interfaces\ModelRepository;
 use Exception;
 use PDO;
 use PDOException;
@@ -10,7 +11,7 @@ use PDOStatement;
 /**
  * Class Model
  *
- * @package Core
+ * @package App\Core
  */
 abstract class Model implements ModelRepository
 {
@@ -44,8 +45,7 @@ abstract class Model implements ModelRepository
     {
         try {
             /** @var PDOStatement $sql */
-            $sql = Database::getInstance()
-                ->prepare("SELECT * FROM `{$this->table}`");
+            $sql = db()->getPdo()->prepare("SELECT * FROM `{$this->table}`");
             if ($sql && $sql->execute()) {
                 return ['items' => $sql->fetchAll(PDO::FETCH_CLASS, static::class), 'error' => null];
             }
@@ -62,8 +62,7 @@ abstract class Model implements ModelRepository
     {
         try {
             /** @var PDOStatement $sql */
-            $sql = Database::getInstance()
-                ->prepare("SELECT * FROM `{$this->table}` WHERE `id` = :id");
+            $sql = db()->getPdo()->prepare("SELECT * FROM `{$this->table}` WHERE `id` = :id");
             if ($sql && $sql->execute(['id' => $id])) {
                 $items = $sql->fetchAll(PDO::FETCH_CLASS, static::class);
                 if (!count($items)) {
@@ -84,8 +83,7 @@ abstract class Model implements ModelRepository
     {
         try {
             /** @var PDOStatement $sql */
-            $sql = Database::getInstance()
-                ->prepare("DELETE FROM `{$this->table}` WHERE `id` = :id");
+            $sql = db()->getPdo()->prepare("DELETE FROM `{$this->table}` WHERE `id` = :id");
             if ($sql && $sql->execute(['id' => $id])) {
                 return ['status' => true, 'error' => null];
             }
@@ -106,7 +104,7 @@ abstract class Model implements ModelRepository
     protected function executeQuery(string $query, array $data): array
     {
         /** @var PDO $pdo */
-        $pdo = Database::getInstance();
+        $pdo = db()->getPdo();
         $pdo->beginTransaction();
         try {
             /** @var PDOStatement $sql */

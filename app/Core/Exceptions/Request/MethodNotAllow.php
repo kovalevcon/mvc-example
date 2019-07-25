@@ -1,16 +1,15 @@
 <?php
 declare(strict_types=1);
-namespace Exceptions;
+namespace App\Core\Exceptions;
 
-use Exception;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class MethodNotAllow
  *
- * @package Exceptions
+ * @package App\Core\Exceptions
  */
-class MethodNotAllow extends Exception
+class MethodNotAllow extends CoreException
 {
     /** @var string $message */
     protected $message = 'Method now allowed.';

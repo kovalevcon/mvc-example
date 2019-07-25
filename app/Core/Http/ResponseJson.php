@@ -1,16 +1,17 @@
 <?php
 declare(strict_types=1);
-namespace Core;
+namespace App\Core\Http;
 
+use App\Core\Interfaces\ResponseJsonable;
 use Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Class Response
  *
- * @package Core
+ * @package App\Core\Http
  */
-class Response implements ResponseJsonable
+class ResponseJson extends Response implements ResponseJsonable
 {
     /** @var array $structure */
     public static $structure = [

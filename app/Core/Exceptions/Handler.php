@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace Exceptions;
+namespace App\Core\Exceptions;
 
 use Exception;
 use PDOException;
@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Exception\{
 /**
  * Class Handler
  *
- * @package Exceptions
+ * @package App\Core\Exceptions
  */
 class Handler
 {

@@ -1,19 +1,19 @@
 <?php
 declare(strict_types=1);
-namespace Exceptions;
+namespace App\Core\Exceptions;
 
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class OrderException
+ * Class ControllerException
  *
- * @package Exceptions
+ * @package App\Core\Exceptions
  */
-class OrderException extends Exception
+class ControllerException extends Exception
 {
     /** @var string $message */
-    protected $message = 'Order error: while work with order.';
+    protected $message = 'System error: internal server error in controller.';
     /** @var int $code */
     protected $code = Response::HTTP_INTERNAL_SERVER_ERROR;
 }

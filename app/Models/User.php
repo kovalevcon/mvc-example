@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
-namespace Models;
+namespace App\Models;
 
-use Core\Model;
+use App\Core\Model;
 
 /**
  * Class User

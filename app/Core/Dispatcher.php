@@ -1,13 +1,15 @@
 <?php
 declare(strict_types=1);
-namespace Core;
+namespace App\Core;
 
+use App\Core\Interfaces\ControllerRepository;
+use App\Core\Interfaces\DispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Class Dispatcher
  *
- * @package Core
+ * @package App\Core
  */
 class Dispatcher implements DispatcherInterface
 {
@@ -31,7 +33,7 @@ class Dispatcher implements DispatcherInterface
     {
         /** @var ControllerRepository $controller */
         $controller = $this->loadController();
-        return $controller->{$this->router->method}($this->router->params);
+        return $controller->{$this->router->method}();
     }
 
     /**
@@ -41,9 +43,11 @@ class Dispatcher implements DispatcherInterface
      */
     private function loadController(): ControllerRepository
     {
-        $controllerName = "Controllers\\{$this->router->controller}";
-        $modelName = 'Models\\' . str_replace('Controller', '', $this->router->controller);
-        $serviceName = 'Services\\' . str_replace('Controller', 'Service', $this->router->controller);
-        return new $controllerName(new $serviceName(new $modelName));
+        $controllerName = "App\\Controllers\\{$this->router->controller}";
+        $modelName = 'App\\Models\\' . str_replace('Controller', '', $this->router->controller);
+        $serviceName = 'App\\Services\\' . str_replace('Controller', 'Service', $this->router->controller);
+        return new $controllerName(
+            [$serviceName => new $serviceName(new $modelName)]
+        );
     }
 }

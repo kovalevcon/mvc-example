@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
-namespace Core;
+namespace App\Core\Interfaces;
 
 /**
  * Interface ModelRepository
  *
- * @package Core
+ * @package App\Core\Interfaces
  */
 interface ModelRepository
 {

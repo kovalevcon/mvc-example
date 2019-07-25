@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace Core;
+namespace App\Core\Interfaces;
 
 use Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 /**
  * Interface ResponseJsonable
  *
- * @package Core
+ * @package App\Core\Interfaces
  */
 interface ResponseJsonable
 {

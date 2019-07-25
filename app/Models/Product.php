@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
-namespace Models;
+namespace App\Models;
 
-use Core\Model;
+use App\Core\Model;
 use Exception;
 
 /**
  * Class Product
  *
- * @package Models
+ * @package App\Models
  */
 class Product extends Model
 {
@@ -92,7 +92,7 @@ class Product extends Model
      */
     public function createOrderProduct(int $orderId): array
     {
-        return ModelFactory::make(OrderProduct::class)->create([
+        return (new OrderProduct)->create([
             'order_id'      => $orderId,
             'product_id'    => $this->id,
         ]);

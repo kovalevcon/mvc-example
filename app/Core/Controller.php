@@ -1,24 +1,44 @@
 <?php
 declare(strict_types=1);
-namespace Core;
+namespace App\Core;
+
+use App\Core\Exceptions\ControllerException;
+use App\Core\Interfaces\ControllerRepository;
+use App\Core\Interfaces\ServiceRepository;
 
 /**
  * Class Controller
  *
- * @package Core
+ * @package App\Core
  */
 abstract class Controller implements ControllerRepository
 {
-    /** @var ServiceRepository $service */
-    protected $service;
+    /** @var array $services */
+    protected $services = [];
 
     /**
      * Controller constructor.
      *
-     * @param ServiceRepository $service
+     * @param array $services
      */
-    public function __construct(ServiceRepository $service)
+    public function __construct(array $services)
     {
-        $this->service = $service;
+        $this->services = $services;
+    }
+
+    /**
+     * Get service by name
+     *
+     * @param string $name
+     * @return ServiceRepository
+     * @throws \App\Core\Exceptions\ControllerException
+     */
+    public function getService(string $name): ServiceRepository
+    {
+        if (!isset($this->services[$name])) {
+            throw new ControllerException('System error: service not found for controller.');
+        }
+
+        return $this->services[$name];
     }
 }

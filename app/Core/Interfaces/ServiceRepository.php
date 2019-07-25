@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
-namespace Core;
+namespace App\Core\Interfaces;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Interface ControllerRepository
  *
- * @package Core
+ * @package App\Core\Interfaces
  */
 interface ServiceRepository
 {

@@ -1,15 +1,18 @@
 <?php
 declare(strict_types=1);
-namespace Core;
+namespace App\Core;
 
+use App\Core\Exceptions\Handler;
+use App\Core\Http\ResponseJson;
+use App\Core\Interfaces\ModelRepository;
+use App\Core\Interfaces\ServiceRepository;
 use Exception;
-use Exceptions\Handler;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Class Service
  *
- * @package Core
+ * @package App\Core
  */
 abstract class Service implements ServiceRepository
 {
@@ -34,9 +37,9 @@ abstract class Service implements ServiceRepository
         try {
             ['items' => $items, 'error' => $error] = $this->model->showAll();
             $this->checkErrorModel($error);
-            return Response::successResponse(['items' => $items, 'count' => count($items)]);
+            return ResponseJson::successResponse(['items' => $items, 'count' => count($items)]);
         } catch (Exception $e) {
-            return Response::errorResponse($e);
+            return ResponseJson::errorResponse($e);
         }
     }
 

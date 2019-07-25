@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
-namespace Core;
+namespace App\Core\Traits;
 
+use App\Core\Exceptions\Handler;
 use Exception;
-use Exceptions\Handler;
 
 /**
  * Trait RequestUtils
  *
- * @package Core
+ * @package App\Core\Traits
  */
 trait RequestUtils
 {
@@ -19,7 +19,7 @@ trait RequestUtils
      * @return array
      * @throws Exception
      */
-    protected function safetyUserData($data)
+    protected function safetyUserData(array $data): array
     {
         if (!is_array($data)) {
             Handler::handle(new Exception(

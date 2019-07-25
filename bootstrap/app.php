@@ -2,5 +2,6 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../vendor/autoload.php';
+(\Dotenv\Dotenv::create(__DIR__ . '/../'))->load();
 
-return new \Core\Application();
+return App\Core\Application::getInstance();

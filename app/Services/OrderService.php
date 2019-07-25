@@ -1,11 +1,15 @@
 <?php
 declare(strict_types=1);
-namespace Services;
+namespace App\Services;
 
-use Core\{Database, Response, Service};
+use App\Core\Exceptions\Handler;
+use App\Core\Exceptions\OrderException;
+use App\Core\Http\ResponseJson;
+use App\Core\Service;
+use App\Models\Order;
+use App\Models\Product;
+use App\Models\User;
 use Exception;
-use Exceptions\{Handler, OrderException};
-use Models\{ModelFactory, Order, Product, User};
 use PDO;
 use PDOException;
 use PDOStatement;
@@ -21,15 +25,16 @@ class OrderService extends Service implements OrderServiceRepository
     /**
      * @inheritDoc
      */
-    public function createOrder(array $params): JsonResponse
+    public function createOrder(): JsonResponse
     {
         try {
+            $params = app('request')->getJsonBody();
             $this->validateCreateOrder($params);
             /** @var array $products */
             $products = $this->getProductsForOrder($params['product_ids']);
 
             try {
-                ['id' => $orderId, 'error' => $error] = ModelFactory::make(Order::class)->create([
+                ['id' => $orderId, 'error' => $error] = (new Order)->create([
                     'user_id'    => (new User)->id,
                     'status'     => Order::STATUS_NEW,
                 ]);
@@ -47,27 +52,28 @@ class OrderService extends Service implements OrderServiceRepository
                     }
                     $sum += $product->cost;
                 }
-                return Response::successResponse(['id' => $orderId, 'sum' => $sum]);
+                return ResponseJson::successResponse(['id' => $orderId, 'sum' => $sum]);
             } catch (Exception $e) {
                 Handler::handle($e);
             }
         } catch (Exception $e) {
-            return Response::errorResponse($e);
+            return ResponseJson::errorResponse($e);
         }
     }
 
     /**
      * @inheritDoc
      */
-    public function payOrder(array $params): JsonResponse
+    public function payOrder(): JsonResponse
     {
         try {
+            $params = app('request')->getJsonBody();
             $this->validatePayOrder($params);
 
             try {
                 ['id' => $orderId, 'sum' => $orderSum] = $params;
                 /** @var Order $order */
-                ['item' => $order, 'error' => $error] = ModelFactory::make(Order::class)->show($orderId);
+                ['item' => $order, 'error' => $error] = (new Order)->show($orderId);
 
                 if ($error) {
                     throw new OrderException($error);
@@ -81,7 +87,8 @@ class OrderService extends Service implements OrderServiceRepository
                     throw new OrderException('Order error: sum of order does not match.');
                 }
 
-                if (!$this->checkGateway(GATEWAY_URL)) {
+                $gatewayUrl = app('configs')->get('core')->gateway->url;
+                if (!$this->checkGateway($gatewayUrl)) {
                     throw new OrderException('Order error: gateway is not available.');
                 }
 
@@ -95,12 +102,12 @@ class OrderService extends Service implements OrderServiceRepository
                 if ($error) {
                     throw new OrderException('Order error: cannot update status for order.');
                 }
-                return Response::successResponse(['id' => $orderId, 'status' => Order::STATUS_PAID]);
+                return ResponseJson::successResponse(['id' => $orderId, 'status' => Order::STATUS_PAID]);
             } catch (Exception $e) {
                 Handler::handle($e);
             }
         } catch (Exception $e) {
-            return Response::errorResponse($e);
+            return ResponseJson::errorResponse($e);
         }
     }
 
@@ -153,12 +160,11 @@ class OrderService extends Service implements OrderServiceRepository
     {
         try {
             /** @var Product $product */
-            $product = ModelFactory::make(Product::class);
+            $product = new Product;
             $whereIn = str_repeat('?,', count($productsIds) - 1) . '?';
 
             /** @var PDOStatement $sql */
-            $sql = (Database::getInstance())
-                ->prepare("SELECT * FROM `{$product->getTable()}` WHERE `id` IN ({$whereIn})");
+            $sql = db()->getPdo()->prepare("SELECT * FROM `{$product->getTable()}` WHERE `id` IN ({$whereIn})");
             if ($sql && $sql->execute($productsIds)) {
                 /** @var array $products */
                 $products = $sql->fetchAll(PDO::FETCH_CLASS, Product::class);

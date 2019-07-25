@@ -1,31 +1,36 @@
 <?php
 declare(strict_types=1);
-namespace Controllers;
+namespace App\Controllers;
 
-use Core\Controller;
+use App\Core\Controller;
+use App\Services\OrderService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Class OrderController
  *
- * @package Controllers
- * @property \Services\OrderServiceRepository $service
+ * @package App\Controllers
+ * @property \App\Services\OrderServiceRepository $service
  */
 class OrderController extends Controller implements OrderControllerRepository
 {
     /**
      * @inheritDoc
      */
-    public function create(array $params): JsonResponse
+    public function create(): JsonResponse
     {
-        return $this->service->createOrder($params);
+        /** @var OrderService $service */
+        $service = $this->getService(OrderService::class);
+        return $service->createOrder();
     }
 
     /**
      * @inheritDoc
      */
-    public function pay(array $params): JsonResponse
+    public function pay(): JsonResponse
     {
-        return $this->service->payOrder($params);
+        /** @var OrderService $service */
+        $service = $this->getService(OrderService::class);
+        return $service->payOrder();
     }
 }

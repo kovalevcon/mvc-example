@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
-namespace Models;
+namespace App\Models;
 
-use Core\{Database, Model};
+use App\Core\Model;
 use Exception;
 use PDO;
 use PDOStatement;
@@ -10,7 +10,7 @@ use PDOStatement;
 /**
  * Class Order
  *
- * @package Models
+ * @package App\Models
  * @property array $orderProducts
  */
 class Order extends Model
@@ -117,7 +117,7 @@ class Order extends Model
      */
     public function createOrderProduct(int $productId): array
     {
-        return ModelFactory::make(OrderProduct::class)->create([
+        return (new OrderProduct)->create([
             'order_id'      => $this->id,
             'product_id'    => $productId,
         ]);
@@ -132,10 +132,9 @@ class Order extends Model
     {
         try {
             /** @var OrderProduct $orderProduct */
-            $orderProduct = ModelFactory::make(OrderProduct::class);
+            $orderProduct = new OrderProduct;
             /** @var PDOStatement $sql */
-            $sql = Database::getInstance()
-                ->prepare("SELECT * FROM `{$orderProduct->getTable()}` WHERE `order_id` = :order_id");
+            $sql = db()->getPdo()->prepare("SELECT * FROM `{$orderProduct->getTable()}` WHERE `order_id` = :order_id");
             if ($sql && $sql->execute(['order_id' => $this->id])) {
                 $items = $sql->fetchAll(PDO::FETCH_CLASS, OrderProduct::class);
                 return count($items) ? $items : null;

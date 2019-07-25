@@ -1,8 +1,9 @@
 <?php
-require_once __DIR__ . '/../../config/db.php';
-require_once __DIR__ . '/../../app/Core/Database.php';
-/** @var PDO $pdo */
-$pdo = \Core\Database::getInstance();
+/** @var \App\Core\Application $app */
+$app = require __DIR__ . '/../../bootstrap/app.php';
+
+/** @var \PDO $pdo */
+$pdo = db()->getPdo();
 $pdo->beginTransaction();
 try {
     /** @var PDOStatement $sql */

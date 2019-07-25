@@ -1,15 +1,16 @@
 <?php
 declare(strict_types=1);
-namespace Services;
+namespace App\Services;
 
-use Core\{Response, Service};
+use App\Core\Http\ResponseJson;
+use App\Core\Service;
 use Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Class ProductService
  *
- * @package Services
+ * @package App\Services
  */
 class ProductService extends Service implements ProductServiceRepository
 {
@@ -30,9 +31,9 @@ class ProductService extends Service implements ProductServiceRepository
 
                 $ids[] = $identify;
             }
-            return Response::successResponse(['ids' => $ids, 'count' => count($ids)]);
+            return ResponseJson::successResponse(['ids' => $ids, 'count' => count($ids)]);
         } catch (Exception $e) {
-            return Response::errorResponse($e);
+            return ResponseJson::errorResponse($e);
         }
     }
 

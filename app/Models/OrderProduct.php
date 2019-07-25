@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
-namespace Models;
+namespace App\Models;
 
-use Core\{Database, Model};
+use App\Core\Model;
 use Exception;
 use PDO;
 use PDOStatement;
@@ -10,7 +10,7 @@ use PDOStatement;
 /**
  * Class OrderProduct
  *
- * @package Models
+ * @package App\Models
  * @property Product $product
  * @property Order $order
  */
@@ -111,10 +111,9 @@ class OrderProduct extends Model
     {
         try {
             /** @var Product $product */
-            $product = ModelFactory::make(Product::class);
+            $product = new Product;
             /** @var PDOStatement $sql */
-            $sql = Database::getInstance()
-                ->prepare("SELECT * FROM `{$product->getTable()}` WHERE `id` = :product_id");
+            $sql = db()->getPdo()->prepare("SELECT * FROM `{$product->getTable()}` WHERE `id` = :product_id");
             if ($sql && $sql->execute(['product_id' => $this->product_id])) {
                 $items = $sql->fetchAll(PDO::FETCH_CLASS, Product::class);
                 return count($items) ? $items[0] : null;
@@ -134,10 +133,9 @@ class OrderProduct extends Model
     {
         try {
             /** @var Order $order */
-            $order = ModelFactory::make(Order::class);
+            $order = new Order;
             /** @var PDOStatement $sql */
-            $sql = Database::getInstance()
-                ->prepare("SELECT * FROM `{$order->getTable()}` WHERE `id` = :order_id");
+            $sql = db()->getPdo()->prepare("SELECT * FROM `{$order->getTable()}` WHERE `id` = :order_id");
             if ($sql && $sql->execute(['order_id' => $this->order_id])) {
                 $items = $sql->fetchAll(PDO::FETCH_CLASS, Order::class);
                 return count($items) ? $items[0] : null;

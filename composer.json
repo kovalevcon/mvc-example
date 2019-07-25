@@ -6,9 +6,13 @@
   "type": "project",
   "require": {
     "php": ">=7.2",
+    "ext-pdo": "*",
+    "ext-curl": "*",
+    "ext-json": "*",
     "symfony/routing": "^4.3",
     "symfony/http-foundation": "^4.3",
-    "symfony/yaml": "^4.3"
+    "symfony/yaml": "^4.3",
+    "vlucas/phpdotenv": "^3.4"
   },
   "authors": [
     {
@@ -20,16 +24,15 @@
   ],
   "autoload": {
     "psr-4": {
-      "Core\\": "app/Core/",
-      "Controllers\\": "app/Controllers/",
-      "Exceptions\\": "app/Exceptions/",
-      "Models\\": "app/Models/",
-      "Services\\": "app/Services/"
-    }
+      "App\\": "app/"
+    },
+    "files": [
+      "app/Core/global_functions.php"
+    ]
   },
   "scripts": {
     "copy-config": [
-      "php -r \"copy('config/db.php.example', 'config/db.php');\""
+      "php -r \"copy('.env.example', '.env');\""
     ],
     "start-migrations": [
       "php -f \"database/migrations/create_mvc_example_database.php\"",

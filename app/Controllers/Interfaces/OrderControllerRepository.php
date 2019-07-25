@@ -1,29 +1,29 @@
 <?php
 declare(strict_types=1);
-namespace Controllers;
+namespace App\Controllers;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Interface OrderControllerInterface
  *
- * @package Controllers
+ * @package App\Controllers
  */
 interface OrderControllerRepository
 {
     /**
      * Method for create order
      *
-     * @param array $params
      * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @throws \App\Core\Exceptions\ControllerException
      */
-    public function create(array $params): JsonResponse;
+    public function create(): JsonResponse;
 
     /**
      * Method for pay order
      *
-     * @param array $params
      * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @throws \App\Core\Exceptions\ControllerException
      */
-    public function pay(array $params): JsonResponse;
+    public function pay(): JsonResponse;
 }

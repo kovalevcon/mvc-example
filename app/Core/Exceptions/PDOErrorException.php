@@ -1,19 +1,18 @@
 <?php
 declare(strict_types=1);
-namespace Exceptions;
+namespace App\Core\Exceptions;
 
-use Exception;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class PDOErrorException
  *
- * @package Exceptions
+ * @package App\Core\Exceptions
  */
-class PDOErrorException extends Exception
+class PDOErrorException extends CoreException
 {
     /** @var string $message */
-    protected $message = 'Database error: Error while connection to PDO.';
+    protected $message = 'Database error: error while connection to PDO.';
     /** @var int $code */
     protected $code = Response::HTTP_INTERNAL_SERVER_ERROR;
 }
